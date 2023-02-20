@@ -89,11 +89,9 @@ def run():
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    # architectures = ['eyeriss', 'eyeriss_2x', 'eyeriss_4x']
-    architectures = ['eyeriss']
+    architectures = ['eyeriss', 'eyeriss_2x', 'eyeriss_4x', 'eyeriss_16x', 'eyeriss_64x']
     for architecture in architectures:
-        # dnns = ['resnet50', 'vgg16', 'deepbench', 'resnext50_32x4d']
-        dnns = ['transformer']
+        dnns = ['resnet50', 'vgg16', 'deepbench', 'resnext50_32x4d']
         for dnn in dnns:
             with open('../in_config/{}_problems/layers.yaml'.format(dnn), 'r') as fd:
                 layers = yaml.load(fd, Loader=yaml.SafeLoader)
@@ -128,7 +126,7 @@ def run():
                                               '{}_input{}'.format(dnn, input_size), 'layer-{}'.format(i))
                     with open('../in_config/{}_problems/{}.yaml'.format(dnn, layer), 'r') as fd:
                         layer_problem = yaml.load(fd, Loader=yaml.SafeLoader)
-                        problem['problem']['instance']['N'] = input_size*16
+                        problem['problem']['instance']['N'] = input_size
                         problem['problem']['instance']['K'] = layer_problem['problem']['K']
                         problem['problem']['instance']['C'] = layer_problem['problem']['C']
                         problem['problem']['instance']['P'] = layer_problem['problem']['P']

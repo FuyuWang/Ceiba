@@ -89,13 +89,9 @@ def run():
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    # architectures = ['arch_pe', 'arch_4x_pe', 'arch_8x_pe', 'arch_16x_pe', 'arch_32x_pe', 'arch_64x_pe',
-    #                  'arch_2x_pe_buffer', 'arch_4x_pe_buffer', 'arch_8x_pe_buffer', 'arch_16x_pe_buffer',
-    #                  'arch_32x_pe_buffer', 'arch_64x_pe_buffer']
-    architectures = ['arch_pe']
+    architectures = ['arch_pe', 'arch_4x_pe', 'arch_8x_pe', 'arch_16x_pe', 'arch_32x_pe', 'arch_64x_pe']
     for architecture in architectures:
-        # dnns = ['resnet50', 'vgg16', 'deepbench', 'resnext50_32x4d']
-        dnns = ['transformer']
+        dnns = ['resnet50', 'vgg16', 'deepbench', 'resnext50_32x4d']
         for dnn in dnns:
             with open('../in_config/{}_problems/layers.yaml'.format(dnn), 'r') as fd:
                 layers = yaml.load(fd, Loader=yaml.SafeLoader)
@@ -116,15 +112,13 @@ def run():
                                                  {'name': 'Outputs', 'projection': [[['N']], [['K']], [['Q']], [['P']]],
                                                   'read-write': True}]},
                                    'instance': {'C': 256, 'K': 512, 'R': 3, 'S': 3, 'P': 56, 'Q': 56, 'N': 16}}}
-            # input_sizes = [1, 2, 4, 8, 16, 32, 64]
-            input_sizes = [512]
+            input_sizes = [1, 2, 4, 8, 16, 32, 64]
+            # input_sizes = [512]
 
             for input_size in input_sizes:
                 actor_state_dict = None
                 layer2chkpt = {}
-                # for i, layer in enumerate(layers):
-                for i in [2]:
-                    layer = layers[i]
+                for i, layer in enumerate(layers):
                     print(architecture, dnn, input_size, i, layer)
                     set_seed(opt.seed)
                     report_dir = os.path.join(opt.report_dir,  'simba_{}'.format(architecture), 'fitness_{}'.format(opt.fitness1),
@@ -162,7 +156,7 @@ def run():
                             yaml.dump(problem, fd)
                         fd.close()
 
-                        env = Environment(fitness_obj=fitness, report_dir=report_dir, use_pool=True, use_IO=True,
+                        env = Environment(fitness_obj=fitness, report_dir=report_dir, use_pool=False, use_IO=True,
                                           debug=False, in_config_dir=opt.config_path, arch_file=architecture,
                                           density=density, save_chkpt=opt.save_chkpt,
                                           use_sparse=opt.use_sparse, explore_bypass=opt.explore_bypass,
