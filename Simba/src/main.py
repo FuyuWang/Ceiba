@@ -156,7 +156,7 @@ def run():
                             yaml.dump(problem, fd)
                         fd.close()
 
-                        env = Environment(fitness_obj=fitness, report_dir=report_dir, use_pool=False, use_IO=True,
+                        env = Environment(fitness_obj=fitness, report_dir=report_dir, use_pool=True, use_IO=True,
                                           debug=False, in_config_dir=opt.config_path, arch_file=architecture,
                                           density=density, save_chkpt=opt.save_chkpt,
                                           use_sparse=opt.use_sparse, explore_bypass=opt.explore_bypass,
